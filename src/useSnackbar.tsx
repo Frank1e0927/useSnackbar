@@ -8,6 +8,13 @@ function useSnackbar () {
     const wrapper = useCallback(() => document.createElement('div'), [])
     const appendRef = useRef(wrapper())
     const containerRef = useRef<React.RefObject<HTMLDivElement>>()
+    const close = useCallback(() => {
+        function closeLogic() {
+            const actualDom = containerRef.current!.current
+            actualDom!.setAttribute('aria-hidden', 'true')
+        }
+        return closeLogic()
+    }, [])
     const open = useCallback(() => {
         function openLogic() {
             const ref = React.createRef<HTMLDivElement>();
@@ -21,14 +28,8 @@ function useSnackbar () {
             render()
         }
         return openLogic()
-    }, [])
-    const close = useCallback(() => {
-        function closeLogic() {
-            const actualDom = containerRef.current!.current
-            actualDom!.setAttribute('aria-hidden', 'true')
-        }
-        return closeLogic()
-    }, [])
+    }, [containerRef, close])
+
     return {
         open,
         close
