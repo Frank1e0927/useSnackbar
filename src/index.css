@@ -1,0 +1,38 @@
+.snackbar {
+    color: pink;
+    position: fixed;
+    display: flex;
+    box-sizing: border-box;
+    left: 50%;
+    bottom: 24px;
+    width: 344px;
+    margin-left: -172px;
+    background: #2a2a2a;
+    border-radius: 2px;
+    box-shadow: 0 1px 4px rgba(0,0,0,.5);
+    -webkit-transform-origin: center;
+    transform-origin: center;
+    color: #eee;
+    z-index: 100;
+    cursor: default;
+    will-change: transform;
+    -webkit-animation: snackbar-show .3s ease 1 forwards;
+    animation: snackbar-show .3s ease 1 forwards;
+}
+.snackbar[aria-hidden='true'] {
+  animation: snackbar-hide 300ms ease forwards 1;
+}
+
+@keyframes snackbar-show {
+    from {
+      opacity: 0;
+      transform: scale(0.5);
+    }
+}
+
+@keyframes snackbar-hide {
+  to {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
