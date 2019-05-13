@@ -1,28 +1,34 @@
-import React, { useRef } from 'react'
+import React, { useRef, useCallback } from 'react'
 import ReactDOM from 'react-dom'
 import Snackbar from './Snackbar'
 import Portal from './Portal'
 
 
 function useSnackbar () {
-    const wrapper = document.createElement('div')
-    const appendRef = useRef(wrapper)
+    const wrapper = useCallback(() => document.createElement('div'), [])
+    const appendRef = useRef(wrapper())
     const containerRef = useRef<React.RefObject<HTMLDivElement>>()
-    function open() {
-        const ref = React.createRef<HTMLDivElement>();
-        document.body.appendChild(appendRef.current);
-        containerRef.current = ref
-        function render() {
-            ReactDOM.render(<Portal>
-                <Snackbar ref={ref} close={close}/>
-            </Portal>, wrapper);
+    const open = useCallback(() => {
+        function openLogic() {
+            const ref = React.createRef<HTMLDivElement>();
+            document.body.appendChild(appendRef.current);
+            containerRef.current = ref
+            function render() {
+                ReactDOM.render(<Portal>
+                    <Snackbar ref={ref} close={close}/>
+                </Portal>, wrapper());
+            }
+            render()
         }
-        render()
-    }
-    function close() {
-        const actualDom = containerRef.current!.current
-        actualDom!.setAttribute('aria-hidden', 'true')
-    }
+        return openLogic()
+    }, [])
+    const close = useCallback(() => {
+        function closeLogic() {
+            const actualDom = containerRef.current!.current
+            actualDom!.setAttribute('aria-hidden', 'true')
+        }
+        return closeLogic()
+    }, [])
     return {
         open,
         close
